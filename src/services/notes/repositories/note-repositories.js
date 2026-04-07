@@ -37,7 +37,7 @@ class NoteRepositories {
     const updatedAt = new Date().toISOString();
 
     const query = {
-      text: 'UPDATE notes SET title = $1, body = $2, tags = $3, updated_at = $4 WHERE id = $5 RETURNING id',
+      text: 'UPDATE notes SET title = $1, body = $2, tags = $3, updated_at = $4 WHERE id = $5 RETURNING id, title, body, tags, created_at, updated_at',
       values: [title, body, tags, updatedAt, id],
     };
 
@@ -48,13 +48,13 @@ class NoteRepositories {
 
   async deleteNote(id) {
     const query = {
-      text: 'DELETE FROM notes WHERE id = $1 RETURNING id',
+      text: 'DELETE FROM notes WHERE id = $1 RETURNING id, title, body, tags, created_at, updated_at',
       values: [id],
     };
 
     const result = await this.pool.query(query);
 
-    return result.rows[0].id;
+    return result.rows[0];
   }
 }
 
